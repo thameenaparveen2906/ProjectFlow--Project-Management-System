@@ -139,4 +139,5 @@ LOGOUT_REDIRECT_URL = "/"
 
 CSRF_COOKIE_HTTPONLY = True
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.StaticFilesStorage'
+
