@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+  <title>ProjectFlow | Project Management System</title>
+{% endblock %}
+
+{% block header %}
+  {% include "includes/header.html" %}
+{% endblock %}
+
+{% block content %}
+  <main class="main-index">
+  <section id="intro">
+    <h1>ProjectFlow</h1>
+    <p>
+      A streamlined project management system to plan, track, and collaborate on projects and tasks with your team.
+    </p>
+    <button style="margin-left: 0px;" onclick="window.location.href='{% url 'tracker:profile' %}'">
+      Go to Dashboard
+    </button>
+  </section>
+
+  <div class="hero-image">
+    <img src="{% static 'img/hero.webp' %}" alt="Project management team illustration">
+  </div>
+</main>
+
+{% endblock %}

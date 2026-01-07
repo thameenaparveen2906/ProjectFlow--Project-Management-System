@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}
+  <title>Task Details</title>
+{% endblock %}
+
+{% block header %}
+  {% include "includes/header.html" %}
+{% endblock %}
+
+{% block content %}
+  <main class="main">
+
+    <!-- Back Button -->
+    <div class="back-button-container">
+      <button
+          type="button"
+          onclick="window.history.back();"
+          style="float: right" class="btn-link">Back
+      </button>
+    </div>
+
+    <!-- Task Information -->
+    <section class="task-details">
+      <a style="display: inline-block; padding: 5px; margin: 10px 0px;" href="{% url 'tracker:task-update' task.pk %}" class="btn-link">Edit Task</a>
+      <h1>{{ task.name }} :: {{ task.task_type.name }}</h1>
+      <p>{{ task.created_at }}</p>
+      <br>
+      <p><strong>Status:</strong> {{ task.status_display }}</p>
+      <p><strong>Priority:</strong> {{ task.priority }}</p>
+      <p><strong>Deadline:</strong> {{ task.deadline }}</p>
+      <p><strong>Team:</strong>
+        <a href="{% url 'tracker:team-details' task.project.team.pk %}">{{ task.project.team.name }}</a>
+      </p>
+      <p><strong>Project:</strong>
+        <a href="{% url 'tracker:project-details' task.project.pk %}">{{ task.project.name }}</a>
+      </p>
+      <p><strong>Assignees:</strong> {{ task.assignees.all|join:", " }}</p>
+      <br>
+      <p class="task-description"><strong>Description:</strong> {{ task.description }}</p>
+
+      <a style="display: inline-block; padding: 5px; margin: 10px 0px;" href="{% url 'tracker:task-delete' task.pk %}" class="btn-link">Delete Task</a>
+      <a style="display: inline-block; padding: 5px; margin: 10px 15px;" href="{% url 'tracker:create-task' %}" class="btn-link">Create New Task</a>
+    </section>
+
+    <!-- Comments -->
+    <section class="task-comments">
+      <h2>Comments</h2>
+
+      <!-- Comments List -->
+      <div class="comment-box">
+        {% if task.comments.exists %}
+          {% for comment in task.comments.all %}
+            <div class="comment">
+              <p><strong>{{ comment.employee.username }}</strong></p>
+              <form style="float: right" action="{% url 'tracker:comment-delete' comment.pk %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Delete</button>
+              </form>
+              <p class="task-description">{{ comment.content }}</p>
+              <span class="comment-meta">{{ comment.created_at|date:"d.m.Y H:i" }}</span>
+            </div>
+          {% endfor %}
+        {% else %}
+          <p>No comments yet. Be the first to comment!</p>
+        {% endif %}
+      </div>
+
+      <!-- Add Comment Form -->
+      <form class="comment-form" action="{% url 'tracker:task-details' task.pk %}" method="post">
+        {% csrf_token %}
+        <textarea style="display: inline-block; padding: 10px; margin: 10px 0px;" name="content" placeholder="Write your comment..." required></textarea><br>
+        <button style="display: inline-block; padding: 10px; margin: 10px 0px;" type="submit" class="submit-btn">Add Comment</button>
+      </form>
+    </section>
+  </main>
+{% endblock %}

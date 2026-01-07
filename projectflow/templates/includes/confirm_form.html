@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block header %}
+  {% include "includes/header.html" %}
+{% endblock %}
+
+{% block content %}
+  <main class="main-index">
+    <div class="content" style="width: 100%; max-width: 500px;">
+      
+      {% block h1 %}
+      {% endblock %}
+
+      <p style="margin-bottom: 15px;">
+        Are you sure you want to delete:
+        {% block delete_object %}
+          <strong></strong>
+        {% endblock %}
+      </p>
+
+      <form class="form" method="post">
+        {% csrf_token %}
+        {{ form }}
+
+        <input type="hidden" name="referer" value="{{ request.META.HTTP_REFERER }}">
+
+        <button type="submit">Delete</button>
+        <button type="button" onclick="window.history.back();" class="btn">
+          Back
+        </button>
+      </form>
+
+    </div>
+  </main>
+{% endblock %}

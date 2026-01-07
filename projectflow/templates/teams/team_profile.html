@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}
+  <title>Team Profile</title>
+{% endblock %}
+
+{% block header %}
+  {% include "includes/header.html" %}
+{% endblock %}
+
+{% block content %}
+  <main class="main">
+    <!-- Back Button -->
+     <div class="back-button-container">
+      <button
+          type="button"
+          onclick="window.history.back();"
+          style="float: right" class="btn-link">Back
+      </button>
+    </div>
+
+    <section class="team-header">
+      <a style="display: inline-block; padding: 8px 15px; margin: 10px 0px;" href="{% url 'tracker:team-update' team.pk %}" class="btn-link">Edit</a>
+      <h1>Team: {{ team.name }}</h1>
+      <p class="task-description">Team Description: {{ team.description }}</p>
+      <!-- Manager Actions -->
+      <div class="manager-actions">
+        <a style="display: inline-block; padding: 8px 15px; margin: 10px 0px;" href="{% url 'tracker:add-member' team.pk %}" class="btn-link">Add Member</a>
+        <a style="display: inline-block; padding: 8px 15px; margin: 10px 5px;" href="{% url 'tracker:create-project' %}" class="btn-link">Create Project</a>
+        <a style="display: inline-block; padding: 8px 15px; margin: 10px 5px;" href="{% url 'tracker:team-delete' team.pk %}" class="btn-link">Delete Team</a>
+      </div>
+    </section>
+
+    <!-- Team Members -->
+    <section class="team-members">
+      <h2>Team Members</h2>
+      <div class="member-list">
+        {% for member in team.members.all %}
+          <div class="member-card">
+            <h3>ID: {{ member.pk }} - {{ member.username }}</h3>
+            <p>Role: {{ member.position }}</p>
+            <a style="display: inline-block; padding: 8px 15px; margin: 10px 0px;"
+                href="{% url 'tracker:delete-member' team_pk=team.pk member_pk=member.pk %}"
+                class="btn-link">Remove Member
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <!-- Current Projects -->
+    <section class="team-projects">
+      <h2>Current Projects</h2>
+      <div class="project-list">
+        {% for project in page_obj %}
+          <div class="project-item">
+            <h3><a href="{% url 'tracker:projects' %}">{{ project.name }}</a></h3>
+            <p>{{ project.description }}</p>
+            <a style="display: inline-block; padding: 8px 15px; margin: 10px 0px;"
+                href="{% url 'tracker:delete-project' project.pk %}"
+                class="btn-link">Delete Project
+            </a>
+          </div>
+        {% empty %}
+          <h3 class="no-tasks">No projects yet, enjoy your free time!</h3>
+        {% endfor %}
+      </div>
+    </section>
+
+    {% block pagination %}
+      {% include "includes/pagination.html" %}
+    {% endblock %}
+  </main>
+{% endblock %}

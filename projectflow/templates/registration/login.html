@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+  <main class="main-index">
+    <div class="content" style="width: 100%; max-width: 400px;">
+      <h1>Login</h1>
+      <form class="form" action="{% url 'login' %}" method="post">
+        {% csrf_token %}
+        {% if form.errors %}
+          <p style="color: red">Invalid credentials</p>
+        {% endif %}
+
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit">Login</button>
+      </form>
+
+      <p>Forgot your password? <a href="{% url 'tracker:reset_password' %}">Reset Password</a></p>
+      <p>Don't have an account? <a href="{% url 'tracker:register' %}">Register</a></p>
+    </div>
+  </main>
+{% endblock %}

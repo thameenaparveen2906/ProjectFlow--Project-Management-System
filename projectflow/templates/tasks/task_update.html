@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}
+  <title>Edit Task</title>
+{% endblock %}
+
+{% block header %}
+  {% include "includes/header.html" %}
+{% endblock %}
+
+{% block content %}
+  <main class="main-index">
+    <div class="content" style="width: 100%; max-width: 500px;">
+      {% block h1 %}
+        <h1>Edit Task</h1>
+      {% endblock %}
+      <form style="padding: 10px;" class="form" action="" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit">Update</button>
+        <button type="button" onclick="window.history.back();" class="btn">Back</button>
+      </form>
+    </div>
+  </main>
+{% endblock %}

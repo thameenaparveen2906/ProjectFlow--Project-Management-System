@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+  <main class="main-index">
+    <div class="content" style="width: 100%; max-width: 400px;">
+      <h1>Register</h1>
+      <form class="form" action="{% url 'tracker:register' %}" method="post">
+        {% csrf_token %}
+        {% if form.errors %}
+          <p style="color: red">{{ form.errors }}</p>
+        {% endif %}
+
+        {{ form.username.label_tag }}
+        {{ form.username }}
+        
+        {{ form.email.label_tag }}
+        {{ form.email }}
+        
+        {{ form.position.label_tag }}
+        <input list="positions" name="position" class="form-input" placeholder="Select or enter a new position" required>
+        <datalist id="positions">
+          {% for position in positions %}
+            <option value="{{ position.name }}">
+          {% endfor %}
+        </datalist>
+
+        {{ form.password1.label_tag }}
+        {{ form.password1 }}
+        
+        {{ form.password2.label_tag }}
+        {{ form.password2 }}
+        
+        <button type="submit">Register</button>
+      </form>
+      <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+    </div>
+  </main>
+{% endblock %}

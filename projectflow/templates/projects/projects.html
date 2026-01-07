@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}
+  <title>Projects List</title>
+{% endblock %}
+
+{% block header %}
+  {% include "includes/header.html" %}
+{% endblock %}
+
+
+{% block content %}
+  <main class="main">
+    <!-- Back button -->
+    <div class="back-button-container">
+      <a href="{% url 'tracker:profile' %}" class="back-button">Back to Profile</a>
+    </div>
+
+    <section class="project-controls">
+      <h1>Projects</h1>
+      <!-- Filter by status -->
+      <form method="get" action="{% url 'tracker:projects' %}">
+        <div class="filter-section">
+          <label for="status-filter">Filter by status:</label>
+          <select name="status" id="status-filter" onchange="this.form.submit()">
+            <option value="all" {% if request.GET.status == 'all' %}selected{% endif %}>All</option>
+            <option value="active" {% if request.GET.status == 'active' %}selected{% endif %}>Active</option>
+            <option value="completed" {% if request.GET.status == 'completed' %}selected{% endif %}>Completed</option>
+          </select>
+        </div>
+      </form>
+
+      <!-- Project management actions -->
+      <div class="project-actions">
+        <a style="display: inline-block; padding: 8px 15px; margin: 10px 0px;" href="{% url 'tracker:create-project' %}" class="btn-link">Create New Project</a>
+      </div>
+    </section>
+
+    <!-- Projects list -->
+    <section class="projects-list">
+      {% for project in page_obj %}
+        <div class="project-card">
+          <h2><a href="{% url 'tracker:project-details' project.pk %}">{{ project.name }}</a></h2>
+          <p><strong>Deadline:</strong> {{ project.deadline }}</p>
+          <p><strong>Status:</strong> {{ project.status_display }}</p>
+          <a style="display: inline-block; padding: 8px 15px; margin: 10px 0px;" href="{% url 'tracker:project-update' project.pk %}" class="btn-link">Edit</a>
+          <a style="display: inline-block; padding: 8px 15px; margin: 10px 15px;" href="{% url 'tracker:delete-project' project.pk %}" class="btn-link">Delete</a>
+        </div>
+      {% endfor %}
+    </section>
+
+    {% block pagination %}
+      {% include "includes/pagination.html" %}
+    {% endblock %}
+  </main>
+{% endblock %}

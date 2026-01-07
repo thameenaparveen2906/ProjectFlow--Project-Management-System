@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}
+  <title>User Dashboard</title>
+{% endblock %}
+
+{% block header %}
+  {% include 'includes/header.html' %}
+{% endblock %}
+
+{% block content %}
+  <main>
+    <!-- Logout & Password -->
+    <div style="float: right" class="back-button-container">
+      <a href="{% url 'tracker:password_change' %}" class="btn-link">Change Password</a>
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button class="create-project-btn" type="submit">Log out</button>
+      </form>
+    </div>
+
+    <!-- User Profile -->
+    <section id="user-profile">
+      <h2>User Profile</h2>
+      <a style="margin-left: 0px;" href="{% url 'tracker:profile-update' employee.pk %}" class="btn-link">Edit Profile</a>
+      <div class="profile-info">
+        <h3 style="padding-top: 15px;"><strong>ID: {{ employee.pk }}</strong></h3>
+
+        {% if employee.username %}
+          <p style="padding-top: 15px;"><strong>Username:</strong> {{ employee.username }}</p>
+        {% endif %}
+
+        {% if employee.first_name %}
+          <p style="padding-top: 15px;"><strong>First Name:</strong> {{ employee.first_name }}</p>
+        {% endif %}
+
+        {% if employee.position %}
+          <p style="padding-top: 15px;"><strong>Position:</strong> {{ employee.position }}</p>
+        {% endif %}
+
+        {% if employee.email %}
+          <p style="padding-top: 15px;"><strong>Email:</strong> {{ employee.email }}</p>
+        {% endif %}
+      </div>
+
+      <div class="user-actions">
+        <a style="margin-left: 0px;" href="{% url 'tracker:create-team' %}" class="btn-link">Create New Team</a>
+        <a href="{% url 'tracker:create-project' %}" class="btn-link">Create New Project</a>
+        <a href="{% url 'tracker:create-task' %}" class="btn-link">Create New Task</a>
+      </div>
+    </section>
+
+    <!-- Summary Panel -->
+    <section id="summary-panel">
+      <h2>Productivity Overview</h2>
+      <div class="summary-info">
+        <div class="summary-item">
+          <h3>Active Tasks</h3>
+          <p>{{ active_tasks }}</p>
+        </div>
+        <div class="summary-item">
+          <h3>Active Projects</h3>
+          <p>{{ active_projects }}</p>
+        </div>
+        <div class="summary-item">
+          <h3>Completed Projects</h3>
+          <p>{{ finished_projects }}</p>
+        </div>
+        <div class="summary-item">
+          <h3>Completed Tasks</h3>
+          <p>{{ finished_tasks }}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tasks Overview -->
+    <section id="tasks-overview">
+      <h2>My Tasks</h2>
+      <div class="task-container">
+        {% for task in page_obj %}
+          <div class="task-card">
+            <a href="{% url 'tracker:task-details' task.pk %}" class="task-name">
+              {{ task.name }}
+            </a>
+            <span class="task-meta">
+              {{ task.created_at|date:"d M, Y, H:i" }}
+            </span>
+            <p><strong>Deadline:</strong> {{ task.deadline|date:"d M, Y" }}</p>
+            <p class="task-description">{{ task.description }}</p>
+          </div>
+        {% empty %}
+          <h3 class="no-tasks">No tasks yet — enjoy your free time!</h3>
+        {% endfor %}
+      </div>
+    </section>
+
+    {% block pagination %}
+      {% include "includes/pagination.html" %}
+    {% endblock %}
+  </main>
+{% endblock %}

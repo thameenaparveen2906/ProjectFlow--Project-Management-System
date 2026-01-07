@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}
+  <title>Tasks</title>
+{% endblock %}
+
+{% block header %}
+  {% include "includes/header.html" %}
+{% endblock %}
+
+{% block content %}
+  <main class="main">
+    <!-- Back Button -->
+    <div class="back-button-container">
+      <a href="{% url 'tracker:profile' %}" class="back-button">Back to Profile</a>
+    </div>
+
+    <section class="tasks-controls">
+      <h1>Tasks</h1>
+      <!-- Filters -->
+      <form action="{% url 'tracker:tasks' %}" method="get">
+        <select name="status" onchange="this.form.submit()">
+          {% for status_value, status_label in form.fields.status.choices %}
+            <option value="{{ status_value }}"
+                    {% if request.GET.status == status_value %}selected{% endif %}>{{ status_label }}</option>
+          {% endfor %}
+        </select>
+
+        <select name="priority" onchange="this.form.submit()">
+          {% for priority_value, priority_label in form.fields.priority.choices %}
+            <option value="{{ priority_value }}"
+                    {% if request.GET.priority == priority_value %}selected{% endif %}>{{ priority_label }}</option>
+          {% endfor %}
+        </select>
+
+        <select name="team" onchange="this.form.submit()">
+          {% for team_id, team_name in form.fields.team.choices %}
+            <option value="{{ team_id }}"
+                    {% if request.GET.team == team_id|stringformat:"s" %}selected{% endif %}>
+                {{ team_name }}
+            </option>
+          {% endfor %}
+        </select>
+      </form>
+    </section>
+
+    <!-- Task List -->
+    <section class="tasks-list">
+      <div class="manager-actions">
+        <a style="display: inline-block; padding: 8px 15px; margin: 10px 0px;" href="{% url 'tracker:create-task' %}" class="btn-link">Create Task</a>
+      </div>
+      {% for task in page_obj %}
+        <div class="task-card">
+          <h2><a href="{% url 'tracker:task-details' task.pk %}">{{ task.name }}</a></h2>
+          <p><strong>Status:</strong> {{ task.status_display }}</p>
+          <p><strong>Priority:</strong> {{ task.priority }}</p>
+          <p><strong>Deadline:</strong> {{ task.deadline }}</p>
+          <p><strong>Team:</strong> {{ task.project.team.name }}</p>
+        </div>
+      {% empty %}
+        <p>No tasks available. Enjoy your free time!</p>
+      {% endfor %}
+    </section>
+
+    {% block pagination %}
+      {% include "includes/pagination.html" %}
+    {% endblock %}
+  </main>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "includes/confirm_form.html" %}
+
+{% block h1 %}
+  <h1>Remove Team Member</h1>
+{% endblock %}
+
+
+{% block delete_object %}
+  <strong>ID:{{ member_to_delete.id }} {{ member_to_delete.username }}</strong>
+  {% if error %}
+    <div style="color: red;">{{ error }}</div>
+  {% endif %}
+{% endblock %}

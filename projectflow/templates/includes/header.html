@@ -1,0 +1,22 @@
+{% load static %}
+
+{% block header %}
+  <header>
+
+    <nav class="navigation">
+      <ul>
+        <li><a href="{% url 'tracker:index' %}">Home</a></li>
+
+        {% if user.is_authenticated %}
+          <li><a href="{% url 'tracker:profile' %}">{{ user.username }}</a></li>
+          <li><a href="{% url 'tracker:teams' %}">Teams</a></li>
+          <li><a href="{% url 'tracker:projects' %}">Projects</a></li>
+          <li><a href="{% url 'tracker:tasks' %}">Tasks</a></li>
+        {% else %}
+          <li><a href="{% url 'login' %}">Log in</a></li>
+          <li><a href="{% url 'tracker:register' %}">Sign up</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+  </header>
+{% endblock %}

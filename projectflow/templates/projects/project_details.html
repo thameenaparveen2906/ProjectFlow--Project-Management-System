@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block header %}
+  {% include "includes/header.html" %}
+{% endblock %}
+
+{% block content %}
+  <main class="main">
+    <!-- "Back" button -->
+    <div class="back-button-container">
+      <a href="{% url 'tracker:projects' %}" class="back-button">Back to Project List</a>
+    </div>
+
+    <!-- Project Information -->
+    <section class="project-header">
+      <a href="{% url 'tracker:project-update' project.pk %}" class="btn-link">Edit</a>
+      <h1>Project: {{ project.name }}</h1>
+      <p class="task-description">Description: {{ project.description }}</p>
+      <p>Deadline: {{ project.deadline }}</p>
+      <p>Status: {{ project.status_display }}</p>
+      <p>Team:
+        <a href="{% url 'tracker:team-details' project.team.pk %}">{{ project.team }}</a>
+      </p>
+
+      <!-- Manager Actions -->
+      <div class="manager-actions">
+        <a href="{% url 'tracker:create-task' %}" class="btn-link">Create Task</a>
+        <a href="{% url 'tracker:create-project' %}" class="btn-link">Create Project</a>
+        <a href="{% url 'tracker:delete-project' project.pk %}" class="btn-link">Delete Project</a>
+      </div>
+    </section>
+
+    <!-- Project Tasks Overview -->
+    <section id="tasks-overview">
+      <h2>Project Tasks & Processes</h2>
+      <div class="task-container">
+        {% for task in page_obj %}
+          <div class="task-card">
+            <a href="{% url 'tracker:task-details' task.pk %}" class="task-name">{{ task.name }}</a>
+            <a
+                style="float: right" href="{% url 'tracker:task-delete' task.pk %}"
+                class="btn-link">Delete Task
+            </a>
+            <span class="task-meta">{{ task.created_at|date:"d M, Y, H:i" }}</span>
+            <p><strong>Deadline:</strong> {{ task.deadline|date:"d M, Y" }}</p>
+            <p class="task-description">{{ task.description }}</p>
+          </div>
+        {% empty %}
+          <h3 class="no-tasks">No tasks yet. Take a break!</h3>
+        {% endfor %}
+      </div>
+    </section>
+
+    {% block pagination %}
+      {% include "includes/pagination.html" %}
+    {% endblock %}
+  </main>
+{% endblock %}

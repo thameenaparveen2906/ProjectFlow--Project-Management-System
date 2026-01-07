@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}
+  <title>Create Task</title>
+{% endblock %}
+
+{% block header %}
+  {% include "includes/header.html" %}
+{% endblock %}
+
+{% block content %}
+  <main class="main-index">
+    <div class="content" style="width: 100%; max-width: 500px;">
+      <h1>Create Task</h1>
+      <form style="padding: 10px;" class="form" action="{% url 'tracker:create-task' %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <div>
+          <a href="{% url 'tracker:create-type' %}">Create Task Type</a><br>
+          <a href="{% url 'tracker:create-team' %}">Go to Team Creation</a><br>
+          <a href="{% url 'tracker:create-project' %}">Go to Project Creation</a>
+        </div>
+        <button type="submit">Create Task</button>
+        <button type="button" onclick="window.history.back();" class="btn">Back</button>
+      </form>
+    </div>
+  </main> 
+{% endblock %}
